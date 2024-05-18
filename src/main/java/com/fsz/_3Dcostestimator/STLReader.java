@@ -3,10 +3,8 @@ package com.fsz._3Dcostestimator;
  import java.nio.ByteBuffer;
  import java.nio.ByteOrder;
  import java.nio.charset.StandardCharsets;
- import java.util.List;
- import java.util.ArrayList;
+ import java.util.*;
  import java.io.*;
- import java.util.Scanner;
  import java.util.regex.Matcher;
  import java.util.regex.Pattern;
 
@@ -14,6 +12,53 @@ package com.fsz._3Dcostestimator;
      public surfaceThicknessException(String message){
          super(message);
      }
+ }
+
+ class materialException extends Exception{
+     public materialException(String message){
+         super(message);
+     }
+ }
+
+ class Materials{
+    private Map<Integer, Material> materialsDict;
+    public Materials(){
+        this.materialsDict = new HashMap<>();
+        this.materialsDict.put(1, new Material("ABS", 1.04));
+        this.materialsDict.put(2, new Material("PLA", 1.24));
+    }
+    public double getMaterialMass(int number) throws materialException {
+        if(materialsDict.containsKey(number)){
+            return materialsDict.get(number).getMass();
+        }else{
+            throw new materialException("Given key of material doesn't exist, so the returned mass is equal to 1.0");
+        }
+    }
+
+    public void printListOfMaterials(){
+        for(Map.Entry<Integer, Material> entry : materialsDict.entrySet()){
+            int key = entry.getKey();
+            String name = entry.getValue().getName();
+            double mass = entry.getValue().getMass();
+            System.out.printf("%d, %s with mass: %.2f\n", key, name, mass);
+        }
+    }
+
+    private static class Material{
+        private String name;
+        private double mass;
+
+        public Material(String name, double mass){
+            this.name=name;
+            this.mass=mass;
+        }
+        public String getName(){
+            return name;
+        }
+        public double getMass(){
+            return mass;
+        }
+    }
  }
 
 class Triangle {
@@ -74,11 +119,11 @@ public class STLReader {
         try {
             this.fileStream = new BufferedInputStream(new FileInputStream(file));
             this.isBinary = isBinary();
-            System.out.println("The file is " + (isBinary ? "binary." : "not binary."));
-            countTriangles();
-            surfArea();
-            double[] volumeAndWeight = this.calculateVolume("cm", 1.24, 5, 0.087);
-            System.out.println("Total volume is: "+volumeAndWeight[0]+", and weight: "+volumeAndWeight[1]);
+            //System.out.println("The file is " + (isBinary ? "binary." : "not binary."));
+            //countTriangles();
+            //surfArea();
+            //double[] volumeAndWeight = this.calculateVolume("cm", 1.24, 5, 0.087);
+            //System.out.println("Total volume is: "+volumeAndWeight[0]+", and weight: "+volumeAndWeight[1]);
 
         }catch (IOException e) {
             System.err.println("Failed to open or read from the file (constructor): " + e.getMessage());
@@ -242,10 +287,12 @@ public class STLReader {
         }
     }
     public static void main(String[] args) throws IOException {
-        String filename = "src/main/resources/astronaut.stl";
+        //String filename = "src/main/resources/astronaut.stl";
         //String filename = "src/main/resources/VICTORY.stl";
-        File file = new File(filename);
-        STLReader stlReader = new STLReader(file);
+        //File file = new File(filename);
+        //STLReader stlReader = new STLReader(file);
+        Materials m = new Materials();
+        m.printListOfMaterials();
     }
 
 
