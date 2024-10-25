@@ -339,12 +339,7 @@ public class STLReader {
         }
     }
     public static void main(String[] args) {
-        //String filename = "src/main/resources/astronaut.stl";
-        //String filename = "src/main/resources/VICTORY.stl";
-        //File file = new File(filename);
-        //STLReader stlReader = new STLReader(file);
         Materials m = new Materials();
-        //m.printListOfMaterials();
     }
 
 

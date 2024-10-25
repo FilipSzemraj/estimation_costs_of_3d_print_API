@@ -7,14 +7,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+
 @SpringBootApplication
 @RestController
+@RequestMapping("/api")
 public class Application {
 
 	public static void main(String[] args) {
 		SpringApplication.run(Application.class, args);
 	}
-	@CrossOrigin(origins = "http://localhost:3000")
+	@CrossOrigin(origins = {"http://localhost:80"})
 	@PostMapping("/upload")
 	public ResponseEntity<?> handleReceivingForm(@RequestParam("file") MultipartFile file,
 												 	@RequestParam("materialId") int materialId,
@@ -39,7 +41,7 @@ public class Application {
 
 			double filamentPrice = 0.08; //1g of filament in polish zl.
 			double powerPrice = weight/8 * 1.15; //Within hour my printer can print something about 8g of filament, and 1kWh in Poland costs around 1.15zl
-			double profitMargin = weight*0.9; //0.9zl per gram of filament, it allows to theoretically earn 900zl on one spool of filament, which cost around 80zl.
+			double profitMargin = weight*0.5; //0.9zl per gram of filament, it allows to theoretically earn 900zl on one spool of filament, which cost around 80zl.
 			double additionalCost=0;
 
 			if(postProcessing.equals("grinding")){
@@ -71,5 +73,8 @@ public class Application {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Could not upload the file: " + file.getOriginalFilename() + "!");
 		}
 	}
-
+	@GetMapping("/health")
+	public ResponseEntity<String> healthCheck() {
+		return ResponseEntity.ok("Backend is running");
+	}
 }

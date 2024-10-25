@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.context.annotation.Import;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
@@ -26,6 +27,8 @@ import java.util.Map;
 import java.time.Duration;
 import java.time.Instant;
 
+
+
 @SpringBootTest
 class ApplicationTests {
 	@Test
@@ -33,7 +36,7 @@ class ApplicationTests {
 		Instant start = Instant.now();
 
 		assertTimeout(Duration.ofMillis(1500), () -> {
-		Path path = Path.of("C:\\reactApps\\EstimationCost\\_3D-cost-estimator\\src\\main\\resources\\astronaut.stl");
+		Path path = Path.of("src/main/resources/astronaut.stl");
 		byte[] content = Files.readAllBytes(path);
 		MockMultipartFile mockFile = new MockMultipartFile("file", "test.stl", "application/octet-stream", content);
 
